@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تولیدکننده لینک مدرن</title>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-Variable-font-face.css" rel="stylesheet">
+    <style>
+        :root { --primary: #6366f1; }
+        body { 
+            font-family: 'Vazirmatn', sans-serif; margin: 0; min-height: 100vh; 
+            display: flex; justify-content: center; align-items: center;
+            background: linear-gradient(-45deg, #0f172a, #1e293b, #312e81, #0f172a);
+            background-size: 400% 400%; animation: gradient 10s ease infinite;
+        }
+        @keyframes gradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .card { 
+            background: #1e293b; padding: 2rem; border-radius: 20px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3); width: 100%; 
+            max-width: 500px; text-align: center; color: #f8fafc; border: 1px solid #334155;
+        }
+        .input-group { display: flex; gap: 5px; margin: 15px 0; }
+        input { 
+            flex: 1; padding: 12px; border: 2px solid #334155; 
+            border-radius: 10px; background: #0f172a; color: white;
+        }
+        input:focus { border-color: var(--primary); outline: none; }
+        button { 
+            background: var(--primary); color: white; border: none; 
+            padding: 10px 20px; border-radius: 8px; cursor: pointer; transition: 0.3s;
+        }
+        button:hover { filter: brightness(1.2); }
+        #statusMessage { margin-top: 10px; color: #10b981; font-size: 0.9rem; display: none; }
+        #resultContainer { 
+            margin-top: 20px; padding: 15px; background: #0f172a; 
+            border-radius: 10px; display: none; word-break: break-all; border: 1px solid #334155;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h3>مبدل لینک درایو</h3>
+    <div class="input-group">
+        <input type="text" id="urlInput" placeholder="لینک گوگل درایو را اینجا وارد کنید...">
+        <button onclick="pasteText()" title="چسباندن متن">📋</button>
+    </div>
+    <button id="genBtn" onclick="generateLink()">نمایش لینک</button>
+    <p id="statusMessage">لینک خروجی به طور خودکار در Clipboard ذخیره شد</p>
+    
+    <div id="resultContainer">
+        <p id="outputLink"></p>
+        <button onclick="openLink()" style="background: #059669;">نمایش در تب جدید</button>
+    </div>
+</div>
+
+<script>
+    // پشتیبانی از کلید Enter
+    document.getElementById('urlInput').addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            generateLink();
+        }
+    });
+
+    async function pasteText() {
+        const text = await navigator.clipboard.readText();
+        document.getElementById('urlInput').value = text;
+    }
+
+    function generateLink() {
+        const input = document.getElementById('urlInput').value;
+        const resultContainer = document.getElementById('resultContainer');
+        const outputLink = document.getElementById('outputLink');
+        const statusMessage = document.getElementById('statusMessage');
+        
+        const regex = /\/d\/(.*?)\//;
+        const match = input.match(regex);
+        
+        if (match && match[1]) {
+            const id = match[1];
+            const finalUrl = `https://lh3.googleusercontent.com/d/${id}`; 
+            outputLink.innerText = finalUrl;
+            resultContainer.style.display = 'block';
+            
+            // کپی خودکار و نمایش پیام
+            navigator.clipboard.writeText(finalUrl);
+            statusMessage.style.display = 'block';
+        } else {
+            statusMessage.style.display = 'none';
+            resultContainer.style.display = 'none';
+            alert('لطفاً یک لینک معتبر گوگل درایو وارد کنید');
+        }
+    }
+
+    function openLink() {
+        window.open(document.getElementById('outputLink').innerText, '_blank');
+    }
+</script>
+
+</body>
+</html>
