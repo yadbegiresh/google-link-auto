@@ -35,6 +35,12 @@
             margin-top: 20px; padding: 15px; background: #0f172a; 
             border-radius: 10px; display: none; word-break: break-all; border: 1px solid #334155;
         }
+        
+        /* Footer Styles */
+        .footer { margin-top: 30px; padding-top: 20px; border-top: 1px solid #334155; font-size: 0.85rem; color: #94a3b8; }
+        .footer a { color: var(--primary); text-decoration: none; display: block; margin-bottom: 5px; }
+        .footer a:hover { text-decoration: underline; }
+        .author { margin-top: 15px; color: #64748b; font-size: 0.8rem; }
     </style>
 </head>
 <body>
@@ -52,10 +58,15 @@
         <p id="outputLink"></p>
         <button onclick="openLink()" style="background: #059669;">نمایش در تب جدید</button>
     </div>
+
+    <div class="footer">
+        <a href="https://yadbegiresh.ir" target="_blank">یادبگیرش: دستیار دیجیتال کسب و کار شما</a>
+        <a href="https://t.me/j6star" target="_blank">ارتباط با ما</a>
+        <div class="author">تهیه شده توسط جواد شقاقی</div>
+    </div>
 </div>
 
 <script>
-    // پشتیبانی از کلید Enter
     document.getElementById('urlInput').addEventListener("keypress", function(event) {
         if (event.key === "Enter") {
             generateLink();
@@ -63,8 +74,12 @@
     });
 
     async function pasteText() {
-        const text = await navigator.clipboard.readText();
-        document.getElementById('urlInput').value = text;
+        try {
+            const text = await navigator.clipboard.readText();
+            document.getElementById('urlInput').value = text;
+        } catch (err) {
+            console.error('دسترسی به کلیپ‌بورد مسدود است');
+        }
     }
 
     function generateLink() {
@@ -82,7 +97,6 @@
             outputLink.innerText = finalUrl;
             resultContainer.style.display = 'block';
             
-            // کپی خودکار و نمایش پیام
             navigator.clipboard.writeText(finalUrl);
             statusMessage.style.display = 'block';
         } else {
